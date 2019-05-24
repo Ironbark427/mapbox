@@ -11,25 +11,9 @@ var myMap = L.map("map", {
 L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
-  id: "mapbox.outdoors",
+  id: "mapbox.light",
   accessToken: API_KEY
 }).addTo(myMap);
-
-// choice of map styles
-// mapbox.streets
-// mapbox.light
-// mapbox.dark
-// mapbox.satellite
-// mapbox.streets-satellite
-// mapbox.wheatpaste
-// mapbox.streets-basic
-// mapbox.comic
-// mapbox.outdoors
-// mapbox.run-bike-hike
-// mapbox.pencil
-// mapbox.pirates
-// mapbox.emerald
-// mapbox.high-contrast
 
 var markers = L.layerGroup().addTo(myMap);
 
@@ -40,15 +24,15 @@ var terrorIcon = L.Icon.extend({
     }
 })
 
-var assaIcon = new terrorIcon({iconUrl:'static/icons/mapboxicon.png'}),
+var assaIcon = new terrorIcon({iconUrl:'static/icons/assassin.png'}),
       kidnIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      bombIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      faciIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      armeIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      hijaIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      unknIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      unarIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'}),
-      hostIcon = new terrorIcon({iconUrl:'/static/icons/mapboxicon.png'});
+      bombIcon = new terrorIcon({iconUrl:'/static/icons/bomb.png'}),
+      faciIcon = new terrorIcon({iconUrl:'/static/icons/infrastructure.png'}),
+      armeIcon = new terrorIcon({iconUrl:'/static/icons/armedassault.png'}),
+      hijaIcon = new terrorIcon({iconUrl:'/static/icons/hijack.png'}),
+      unknIcon = new terrorIcon({iconUrl:'/static/icons/question.png'}),
+      unarIcon = new terrorIcon({iconUrl:'/static/icons/punch.png'}),
+      hostIcon = new terrorIcon({iconUrl:'/static/icons/hostage.png'});
 
 // var greenIcon = L.icon({
 //     iconUrl: '/static/icons/mapboxicon.png',
@@ -71,7 +55,7 @@ function buildMap(year){
        var latitude = response.latitude[i];
        var longitude = response.longitude[i];
        if (!isNaN(latitude)) {
-         markers.addLayer(L.marker([latitude, longitude], {icon: assaIcon}))
+         markers.addLayer(L.marker([latitude, longitude], {icon: hostIcon}))
         // L.marker([latitude, longitude]).addTo(markers);
        }
      }
