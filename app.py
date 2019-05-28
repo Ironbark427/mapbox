@@ -18,21 +18,11 @@ def years():
     return jsonify(list(df['iyear']))
 
 
-@app.route('/latlong/')
-def latlong():
-    conn = sqlite3.connect('db/storage.db')
-    df = pd.read_sql_query('select distinct longitude, latitude from terror_data limit 100;', conn)
-    return df.to_json()
-
-
 @app.route("/position/<year>")
 def position(year):
     conn = sqlite3.connect('db/storage.db')
     df = pd.read_sql_query(
-        f'select iyear, longitude, latitude from terror_data WHERE iyear = (?);', conn, params=(year,))
-
-    #df = df.loc[df['iyear'] == year]
-
+        f'select iyear, longitude, latitude, attacktype1_txt from terror_data WHERE iyear = (?);', conn, params=(year,))
     return df.to_json()
 
 

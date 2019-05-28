@@ -23,6 +23,7 @@
     </div>
     <div class="col-4">
       <div id="mapbox-panel">
+        <select id="selYears" onchange="optionChanged(this.value)"></select>
         <div id="map"></div>
       </div>
     </div>
@@ -30,7 +31,7 @@
   <!-- <script type="text/javascript" src="js/config.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="{{ url_for('static', filename='js/config.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/appnick2.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/appnick.js') }}"></script>
   <!-- <script src="{{ url_for('static', filename='js/config.js') }}"></script> -->
 
 </body>
