@@ -26,5 +26,13 @@ def position(year):
     return df.to_json()
 
 
+@app.route("/bubble/<year>")
+def bubble(year):
+    conn = sqlite3.connect('db/storage.db')
+    df = pd.read_sql_query(
+        f'select iyear, country, country_txt from terror_data WHERE iyear = (?);', conn, params=(year,))
+    return df.to_json()
+
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -18,7 +18,10 @@
   <div class="row justify-content-center">
     <div class="col-4">
       <div id="chart-01" class="chart">chart1<select id="selDataset" onchange="optionChanged(this.value)"></select></div>
-      <div id="chart-02" class="chart">chart2</div>
+      <div id="chart-02-panel">
+          <select id="bubSelYears" onchange="bubbleOptionChange(this.value)"></select>
+          <div id="chart-02" class="chart"></div>
+      </div>
       <div id="chart-03" class="chart">chart3</div>
     </div>
     <div class="col-4">
@@ -30,8 +33,9 @@
   </div>
   <!-- <script type="text/javascript" src="js/config.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="{{ url_for('static', filename='js/config.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/appnick.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/appnick1.js') }}"></script>
   <!-- <script src="{{ url_for('static', filename='js/config.js') }}"></script> -->
 
 </body>

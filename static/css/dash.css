@@ -20,8 +20,9 @@
 .chart {
   margin-bottom: 1rem;
   height: 250px;
-  padding: 10px;
+  padding: 0px;
   border-color: black;
   border-width: 1px;
   border-style: dashed;
+  overflow: hidden;
 }
