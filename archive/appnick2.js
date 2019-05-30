@@ -34,6 +34,13 @@ var assaIcon = new terrorIcon({iconUrl:'static/icons/assassin.png'}),
       unarIcon = new terrorIcon({iconUrl:'/static/icons/punch.png'}),
       hostIcon = new terrorIcon({iconUrl:'/static/icons/hostage.png'});
 
+// var greenIcon = L.icon({
+//     iconUrl: '/static/icons/mapboxicon.png',
+//     iconSize:     [24, 24], // size of the icon
+// //    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+// //    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+// });
+
 function buildMap(year){
     console.log(year);
     var url = `/position/${year}`;

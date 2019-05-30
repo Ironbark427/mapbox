@@ -1,42 +1,136 @@
-console.log("found me!")
+console.log("launching map of TERROR!")
 
-// Create map object and set default layers
-// Create a map object
+//Create layer groups: one for each terror attack group
+var markers = L.layerGroup();
+var assasination = L.layerGroup();
+var kidnapping = L.layerGroup();
+var bombing = L.layerGroup();
+var facility = L.layerGroup();
+var armed = L.layerGroup();
+var hijacking = L.layerGroup();
+var unknown = L.layerGroup();
+var unarmed = L.layerGroup();
+var hostage = L.layerGroup();
+
+//Set up icon class
+var terrorIcon = L.Icon.extend({
+    options: {
+        iconSize: [25,25],
+    //    popupAnchor: [-3,25]
+    }
+})
+
+//Set up each icon image for each layer above
+var assaIcon = new terrorIcon({iconUrl:'static/icons/assassin.png'}),
+      kidnIcon = new terrorIcon({iconUrl:'/static/icons/kidnapping.png'}),
+      bombIcon = new terrorIcon({iconUrl:'/static/icons/bomb.png'}),
+      faciIcon = new terrorIcon({iconUrl:'/static/icons/infrastructure.png'}),
+      armeIcon = new terrorIcon({iconUrl:'/static/icons/armedassault.png'}),
+      hijaIcon = new terrorIcon({iconUrl:'/static/icons/hijack.png'}),
+      unknIcon = new terrorIcon({iconUrl:'/static/icons/question.png'}),
+      unarIcon = new terrorIcon({iconUrl:'/static/icons/punch.png'}),
+      hostIcon = new terrorIcon({iconUrl:'/static/icons/hostage.png'});
+
+//Set up map instance
 var myMap = L.map("map", {
-  center: [37.09, -95.71],
-  zoom: 5
-});
+        center: [37.09, -95.71],
+        zoom: 5,
+        layers: [assasination, kidnapping, bombing, facility, armed, hijacking, unknown, unarmed, hostage]
+ });
 
-// Add a tile layer
-L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-  attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-  maxZoom: 18,
-  id: "mapbox.streets",
-  accessToken: API_KEY
-}).addTo(myMap);
+ // Add a tile layer
+ var landMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+   maxZoom: 18,
+   id: "mapbox.light",
+   accessToken: API_KEY
+ }).addTo(myMap);
 
-function buildMap(){
+// define contol titles for map
+ var overlayMaps = {
+     "Assasination": assasination,
+     "Kidnapping": kidnapping,
+     "Bombing": bombing,
+     "Facility/Infrastructure": facility,
+     "Armed Assault": armed,
+     "Hijacking": hijacking,
+     "Unknown": unknown,
+     "Unarmed Assault": unarmed,
+     "Hostage Taking": hostage
+ };
 
-    d3.json("/latlong").then(function(response) {
+ // Pass our map layers into our layer control
+ // Add the layer control to the map
+ // Using null due to single baseMap choice
+ L.control.layers(null, overlayMaps, {
+     collapsed: false
+ }).addTo(myMap);
 
-      thing= response.centlat;
-     for (var i = 0; i < Object.keys(response.longitude).length-1; i++) {
-       var latitude = response.latitude[i];
-       var longitude = response.longitude[i];
-       console.log(latitude);
-       if (!isNaN(latitude)) {
-         console.log('made it!');
-         L.marker([latitude, longitude]).addTo(myMap);
-       }
+
+function buildMap(year){
+//    console.log(year);
+    var url = `/position/${year}`;
+    d3.json(url).then(function(response) {
+
+    // clear out old markers on map
+    markers.clearLayers();
+    assasination.clearLayers();
+    kidnapping.clearLayers();
+    bombing.clearLayers();
+    facility.clearLayers();
+    armed.clearLayers();
+    hijacking.clearLayers();
+    unknown.clearLayers();
+    unarmed.clearLayers();
+    hostage.clearLayers();
+
+    //cycle through all records and attach the correct icon and location to the correct attack layer
+    for (var i = 0; i < Object.keys(response.longitude).length; i++) {
+         var yearly = response.iyear[i];
+         var latitude = response.latitude[i];
+         var longitude = response.longitude[i];
+         if (!isNaN(latitude)) {
+             switch (response.attacktype1_txt[i]) {
+                case 'Assassination':
+                    L.marker([latitude, longitude], {icon: assaIcon}).addTo(assasination);
+                    break;
+                case 'Hostage Taking (Kidnapping)':
+                    L.marker([latitude, longitude], {icon: kidnIcon}).addTo(kidnapping);
+                    break;
+                case 'Bombing/Explosion':
+                    L.marker([latitude, longitude], {icon: bombIcon}).addTo(bombing);
+                    break;
+                case 'Facility/Infrastructure Attack':
+                    L.marker([latitude, longitude], {icon: faciIcon}).addTo(facility);
+                    break;
+                case 'Armed Assault':
+                    L.marker([latitude, longitude], {icon: armeIcon}).addTo(armed);
+                    break;
+                case 'Hijacking':
+                    L.marker([latitude, longitude], {icon: hijaIcon}).addTo(hijacking);
+                    break;
+                case 'Unknown':
+                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown);
+                    break;
+                case 'Unarmed Assault':
+                    L.marker([latitude, longitude], {icon: unarIcon}).addTo(unarmed);
+                    break;
+                case 'Hostage Taking (Barricade Incident)':
+                    L.marker([latitude, longitude], {icon: hostIcon}).addTo(hostage);
+                    break;
+                default:
+                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown);
+                    break;
+                }
+          }
      }
-
      });
 };
 
 
 function init() {
   // Grab a reference to the dropdown select element
-  var selector = d3.select("#selDataset");
+  var selector = d3.select("#selYears");
 
   // Use the list of sample names to populate the select options
   d3.json("/years").then((Years) => {
@@ -47,59 +141,15 @@ function init() {
         .property("value", year);
     });
 
-    buildMap();
-//     Use the first sample from the list to build the initial plots
-//     const firstSample = sampleNames[0];
-//     buildCharts(firstSample);
-//     buildMetadata(firstSample);
+    const firstYear = Years[0];
+    buildMap(firstYear);
    });
  }
 
 //
-// function optionChanged(newSample) {
-//   // Fetch new data each time a new sample is selected
-//   buildCharts(newSample);
-//   buildMetadata(newSample);
-// }
+function optionChanged(newYear) {
+   buildMap(newYear);
+}
 
 // Initialize the dashboard
 init();
-
-
-
-
-// function buildCharts(sample) {
-//
-//   // @TODO: Use `d3.json` to fetch the sample data for the plots
-//   var url = `/samples/${sample}`;
-//   d3.json(url).then(function(data) {
-//
-//     // @TODO: Build a Bubble Chart using the sample data
-//     var exes = data.otu_ids;
-//     var whys = data.sample_values;
-//     var bigosmallo = data.sample_values;
-//     var colors = data.otu_ids; // add a little pizzazz
-//     var text_stuff = data.otu_labels;
-//
-//     var trace1 = {
-//       x: exes,
-//       y: whys,
-//       text: text_stuff,
-//       mode: 'markers',
-//       marker: {
-//         color: colors,
-//         size: bigosmallo
-//       }
-//     };
-//
-//     var doom = [trace1];
-//
-//     var layout = {
-//       xaxis: { title: "OTU ID"},
-//       // how do I get better more interesting colors?
-//     };
-//
-//     Plotly.newPlot('bubble', doom, layout);
-//
-// });
-// }

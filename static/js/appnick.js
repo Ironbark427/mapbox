@@ -67,11 +67,14 @@ var myMap = L.map("map", {
  }).addTo(myMap);
 
 
-function buildMap(year){
+function buildMap(year,country){
 //    console.log(year);
-    var url = `/position/${year}`;
-    d3.json(url).then(function(response) {
 
+// TODO: Need to add country to position and pull in centlat and centlong
+// Need to
+    var url = `/position/${year}/${country}`;
+    d3.json(url).then(function(response) {
+    //    console.log(response.centlat);
     // clear out old markers on map
     markers.clearLayers();
     assasination.clearLayers();
@@ -83,72 +86,258 @@ function buildMap(year){
     unknown.clearLayers();
     unarmed.clearLayers();
     hostage.clearLayers();
-
+//    console.log(Object.keys(response.longitude).length);
     //cycle through all records and attach the correct icon and location to the correct attack layer
     for (var i = 0; i < Object.keys(response.longitude).length; i++) {
          var yearly = response.iyear[i];
          var latitude = response.latitude[i];
          var longitude = response.longitude[i];
-         if (!isNaN(latitude)) {
+         var target = response.targtype1_txt[i];
+         var subtarget = response.targsubtype1_txt[i];
+         if (!isNaN(latitude) && (latitude != 0)) {
              switch (response.attacktype1_txt[i]) {
                 case 'Assassination':
-                    L.marker([latitude, longitude], {icon: assaIcon}).addTo(assasination);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: assaIcon}).addTo(assasination)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: assaIcon}).addTo(assasination)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Hostage Taking (Kidnapping)':
-                    L.marker([latitude, longitude], {icon: kidnIcon}).addTo(kidnapping);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: kidnIcon}).addTo(kidnapping)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: kidnIcon}).addTo(kidnapping)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Bombing/Explosion':
-                    L.marker([latitude, longitude], {icon: bombIcon}).addTo(bombing);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: bombIcon}).addTo(bombing)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: bombIcon}).addTo(bombing)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Facility/Infrastructure Attack':
-                    L.marker([latitude, longitude], {icon: faciIcon}).addTo(facility);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: faciIcon}).addTo(facility)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: faciIcon}).addTo(facility)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Armed Assault':
-                    L.marker([latitude, longitude], {icon: armeIcon}).addTo(armed);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: armeIcon}).addTo(armed)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: armeIcon}).addTo(armed)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Hijacking':
-                    L.marker([latitude, longitude], {icon: hijaIcon}).addTo(hijacking);
+                    if (!subtarget) {
+                L.marker([latitude, longitude], {icon: hijaIcon}).addTo(hijacking)
+                    .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                } else {
+                L.marker([latitude, longitude], {icon: hijaIcon}).addTo(hijacking)
+                    .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                }
                     break;
                 case 'Unknown':
-                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Unarmed Assault':
-                    L.marker([latitude, longitude], {icon: unarIcon}).addTo(unarmed);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: unarIcon}).addTo(unarmed)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: unarIcon}).addTo(unarmed)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 case 'Hostage Taking (Barricade Incident)':
-                    L.marker([latitude, longitude], {icon: hostIcon}).addTo(hostage);
+                    if (!subtarget) {
+                    L.marker([latitude, longitude], {icon: hostIcon}).addTo(hostage)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    } else {
+                    L.marker([latitude, longitude], {icon: hostIcon}).addTo(hostage)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Target: '+ target + '<br>Aim: ' + subtarget + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
+                    }
                     break;
                 default:
-                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown);
+                    L.marker([latitude, longitude], {icon: unknIcon}).addTo(unknown)
+                        .bindPopup(response.attacktype1_txt[i] + '<br>Latitude: ' + latitude + '<br>Longitude: ' + longitude);
                     break;
                 }
           }
      }
+    // myMap.panTo(new L.LatLng(response.centlat[0], response.centlong[0]), 6);
+    myMap.setView(new L.LatLng(response.centlat[0], response.centlong[0]), 4)
      });
 };
 
 
+function buildBubble(year) {
+
+  // @TODO: Use `d3.json` to fetch the sample data for the plots
+  var url = `/bubble/${year}`;
+  d3.json(url).then(function(response) {
+
+      var arr = response.country_txt;
+      var lookup = {};
+      var countryExe = [];
+      var countryCount = 0;
+
+      for (var i = 0; i < Object.keys(response.country).length; i++) {
+          if(!(arr[i] in lookup)){
+              lookup[arr[i]] = 1;
+              countryCount +=1;
+              countryExe.push(countryCount);
+          }
+          else{ lookup[arr[i]] += 1;
+          }
+      }
+      var countries = Object.keys(lookup);
+      var counts = Object.values(lookup);
+     var exes = countryExe;
+     var whys = counts;
+     var bigosmallo = counts;
+    var colors = countryExe; // add a little pizzazz
+    var text_stuff = countries;
+
+     var trace1 = {
+       x: exes,
+       y: whys,
+       text: text_stuff,
+       mode: 'markers',
+       marker: {
+        color: colors,
+        colorscale: 'Jet',
+        size: bigosmallo,
+        sizeref: 2.0 * Math.max(...bigosmallo) / (50**2),
+        sizemode: 'area'
+       }
+    };
+
+     var doom = [trace1];
+
+    var layout = {
+       xaxis: {
+           autotick: true,
+           showgrid: false,
+           zeroline: false,
+           ticks: '',
+           showticklabels: false
+       },
+       margin: {
+           l: 50,
+           r: 50,
+           b: 5,
+           t: 10,
+           pad: 0
+       },
+    //   // how do I get better more interesting colors?
+     };
+    //
+    Plotly.newPlot('chart-02', doom, layout, {responsive: true});
+  });
+}
+
 function init() {
   // Grab a reference to the dropdown select element
   var selector = d3.select("#selYears");
-
-  // Use the list of sample names to populate the select options
-  d3.json("/years").then((Years) => {
+  var bubbleSelector = d3.select("#bubSelYears");
+  var countryselector = d3.select("#selCountry");
+  var firstYear = 1970;
+  var firstCountry;
+  var years = d3.json("/years")
+  years.then((Years) => {
     Years.forEach((year) => {
       selector
         .append("option")
         .text(year)
         .property("value", year);
+      bubbleSelector
+       .append("option")
+       .text(year)
+       .property("value", year);
     });
-
-    const firstYear = Years[0];
-    buildMap(firstYear);
+    firstYear = Years[0];
    });
+
+    var url = `/country/${firstYear}`
+    var country = d3.json(url)
+    country.then((Country) => {
+      Country.forEach((country) => {
+        countryselector
+          .append("option")
+          .text(country)
+          .property("value", country);
+      });
+      firstCountry = Country[0];
+//      console.log(Country.length);
+     });
+
+// need to define and pull in firstCountry
+// pass firstCountry to buildMap call
+
+   Promise.all([years,country]).then(() =>{
+     buildMap(firstYear,firstCountry);
+     buildBubble(firstYear);
+   })
+
  }
 
-//
+function resetCountryList(){
+    //reset function
+}
+
 function optionChanged(newYear) {
-   buildMap(newYear);
+  // need to call a function to reset country list
+  // need to pull country selector choice
+  d3.selectAll("#selCountry").html("");
+  var countryselector = d3.select("#selCountry");
+  var newCountry;
+  var url = `/country/${newYear}`;
+  var country = d3.json(url)
+  country.then((Country) => {
+    Country.forEach((country) => {
+      countryselector
+        .append("option")
+        .text(country)
+        .property("value", country);
+    });
+    newCountry = Country[0];
+   });
+
+   Promise.all([country]).then(() =>{
+     buildMap(newYear,newCountry);
+     console.log(newCountry);
+   })
+}
+
+function countryOptionChange(country) {
+    var year = d3.select("#selYears").property("value");
+//    console.log(year);
+  // selecting country to pass to buildMap
+   buildMap(year, country);
+}
+
+function bubbleOptionChange(newYear) {
+    buildBubble(newYear);
 }
 
 // Initialize the dashboard

@@ -30,7 +30,7 @@ def country(year):
 def position(year, country):
     conn = sqlite3.connect('db/storage.db')
     df = pd.read_sql_query(
-        f'select iyear, centlat, centlong, longitude, latitude, attacktype1_txt from terror_data WHERE iyear = (?) and country_txt = (?);', conn, params=(year, country))
+        f'select iyear, centlat, centlong, longitude, latitude, attacktype1_txt, targtype1_txt, targsubtype1_txt from terror_data WHERE iyear = (?) and country_txt = (?);', conn, params=(year, country))
     return df.to_json()
 
 
