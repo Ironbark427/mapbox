@@ -34,6 +34,14 @@ def position(year, country):
     return df.to_json()
 
 
+@app.route('/highchart/')
+def highchart():
+    conn = sqlite3.connect('db/storage.db')
+    df = pd.read_sql_query(
+        'select count(targtype1_txt) as thing from terror_data group by iyear;', conn)
+    return df.to_json()
+
+
 @app.route("/bubble/<year>")
 def bubble(year):
     conn = sqlite3.connect('db/storage.db')

@@ -256,6 +256,32 @@ function buildBubble(year) {
   });
 }
 
+function buildHighChart() {
+    var options = {
+        chart: {
+            renderTo: 'chart-03',
+            type: 'line'
+        },
+        title: { text: 'Total Terror Attacks'
+        },
+        series: [{}]
+    };
+    var url =  "/highchart";
+    d3.json(url).then(function(data) {
+
+    var attackArr = [];
+
+    for (var i = 0; i < Object.keys(data.thing).length; i++) {
+            attackArr.push(data.thing[i]);
+    }
+
+    options.series[0].name = "Terror Attacks";
+    options.series[0].pointStart = 1970;
+    options.series[0].data = attackArr;
+    var chart = new Highcharts.Chart(options);
+    });
+}
+
 function init() {
   // Grab a reference to the dropdown select element
   var selector = d3.select("#selYears");
@@ -297,6 +323,7 @@ function init() {
    Promise.all([years,country]).then(() =>{
      buildMap(firstYear,firstCountry);
      buildBubble(firstYear);
+     buildHighChart();
    })
 
  }

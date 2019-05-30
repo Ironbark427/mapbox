@@ -22,7 +22,7 @@
           <select id="bubSelYears" onchange="bubbleOptionChange(this.value)"></select>
           <div id="chart-02" class="chart"></div>
       </div>
-      <div id="chart-03" class="chart">chart3</div>
+      <div id="chart-03" class="chart"></div>
     </div>
     <div class="col-4">
       <div id="mapbox-panel">
@@ -32,8 +32,14 @@
       </div>
     </div>
   </div>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+  <script src="https://code.highcharts.com/modules/series-label.js"></script>
+  <script src="https://code.highcharts.com/modules/annotations.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   <script src="{{ url_for('static', filename='js/config.js') }}"></script>
   <script src="{{ url_for('static', filename='js/appnick.js') }}"></script>
 
