@@ -18,19 +18,18 @@ def years():
     return jsonify(list(df['iyear']))
 
 
-@app.route('/country/<year>')
-def country(year):
+@app.route('/country/')
+def country():
     conn = sqlite3.connect('db/storage.db')
-    df = pd.read_sql_query(
-        'select distinct country_txt from terror_data WHERE iyear = (?) ORDER BY country_txt ASC;', conn, params=(year,))
+    df = pd.read_sql_query('select distinct country_txt from terror_data;', conn)
     return jsonify(list(df['country_txt']))
 
 
-@app.route("/position/<year>/<country>/")
-def position(year, country):
+@app.route("/position/<year>")
+def position(year):
     conn = sqlite3.connect('db/storage.db')
     df = pd.read_sql_query(
-        f'select iyear, centlat, centlong, longitude, latitude, attacktype1_txt from terror_data WHERE iyear = (?) and country_txt = (?);', conn, params=(year, country))
+        f'select iyear, longitude, latitude, attacktype1_txt from terror_data WHERE iyear = (?);', conn, params=(year,))
     return df.to_json()
 
 

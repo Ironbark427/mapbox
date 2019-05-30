@@ -67,16 +67,14 @@ var myMap = L.map("map", {
  }).addTo(myMap);
 
 
-function buildMap(year){
+function buildMap(year,country){
 //    console.log(year);
 
 // TODO: Need to add country to position and pull in centlat and centlong
 // Need to
-
-
-    var url = `/position/${year}`;
+    var url = `/position/${year}/${country}`;
     d3.json(url).then(function(response) {
-
+    //    console.log(response.centlat);
     // clear out old markers on map
     markers.clearLayers();
     assasination.clearLayers();
@@ -88,7 +86,7 @@ function buildMap(year){
     unknown.clearLayers();
     unarmed.clearLayers();
     hostage.clearLayers();
-
+    console.log(Object.keys(response.longitude).length);
     //cycle through all records and attach the correct icon and location to the correct attack layer
     for (var i = 0; i < Object.keys(response.longitude).length; i++) {
          var yearly = response.iyear[i];
@@ -129,6 +127,7 @@ function buildMap(year){
                 }
           }
      }
+     myMap.panTo(new L.LatLng(response.centlat[0], response.centlong[0]));
      });
 };
 
@@ -204,7 +203,7 @@ function init() {
   var selector = d3.select("#selYears");
   var bubbleSelector = d3.select("#bubSelYears");
   var countryselector = d3.select("#selCountry");
-  var firstYear;
+  var firstYear = 1970;
   var firstCountry;
   // Use the list of sample names to populate the select options
   var years = d3.json("/years")
@@ -222,35 +221,62 @@ function init() {
     firstYear = Years[0];
    });
 
-   var country = d3.json("/countries")
-   country.then((Country) => {
-     Country.forEach((country) => {
-       selector
-         .append("option")
-         .text(country)
-         .property("value", country);
+    var url = `/country/${firstYear}`
+    var country = d3.json(url)
+    country.then((Country) => {
+      Country.forEach((country) => {
+        countryselector
+          .append("option")
+          .text(country)
+          .property("value", country);
+      });
+      firstCountry = Country[0];
+      console.log(Country.length);
      });
-    });
 
 // need to define and pull in firstCountry
 // pass firstCountry to buildMap call
 
-
-   Promise.all([years,countries]).then(() =>{
-     buildMap(firstYear);
+   Promise.all([years,country]).then(() =>{
+     buildMap(firstYear,firstCountry);
      buildBubble(firstYear);
    })
+
  }
+
+function resetCountryList(){
+    //reset function
+}
 
 function optionChanged(newYear) {
   // need to call a function to reset country list
   // need to pull country selector choice
-   buildMap(newYear);
+  d3.selectAll("#selCountry").html("");
+  var countryselector = d3.select("#selCountry");
+  var newCountry;
+  var url = `/country/${newYear}`;
+  var country = d3.json(url)
+  country.then((Country) => {
+    Country.forEach((country) => {
+      countryselector
+        .append("option")
+        .text(country)
+        .property("value", country);
+    });
+    newCountry = Country[0];
+   });
+
+   Promise.all([country]).then(() =>{
+     buildMap(newYear,newCountry);
+     console.log(newCountry);
+   })
 }
 
-function countryOptionChange(newYear) {
+function countryOptionChange(country) {
+    var year = d3.select("#selYears").property("value");
+//    console.log(year);
   // selecting country to pass to buildMap
-   buildMap(newYear);
+   buildMap(year, country);
 }
 
 function bubbleOptionChange(newYear) {
