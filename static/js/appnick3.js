@@ -69,6 +69,11 @@ var myMap = L.map("map", {
 
 function buildMap(year){
 //    console.log(year);
+
+// TODO: Need to add country to position and pull in centlat and centlong
+// Need to
+
+
     var url = `/position/${year}`;
     d3.json(url).then(function(response) {
 
@@ -198,8 +203,12 @@ function init() {
   // Grab a reference to the dropdown select element
   var selector = d3.select("#selYears");
   var bubbleSelector = d3.select("#bubSelYears");
+  var countryselector = d3.select("#selCountry");
+  var firstYear;
+  var firstCountry;
   // Use the list of sample names to populate the select options
-  d3.json("/years").then((Years) => {
+  var years = d3.json("/years")
+  years.then((Years) => {
     Years.forEach((year) => {
       selector
         .append("option")
@@ -210,22 +219,37 @@ function init() {
        .text(year)
        .property("value", year);
     });
-
-    const firstYear = Years[0];
-    buildMap(firstYear);
-    buildBubble(firstYear);
+    firstYear = Years[0];
    });
 
+   var country = d3.json("/countries")
+   country.then((Country) => {
+     Country.forEach((country) => {
+       selector
+         .append("option")
+         .text(country)
+         .property("value", country);
+     });
+    });
+
+// need to define and pull in firstCountry
+// pass firstCountry to buildMap call
 
 
-
+   Promise.all([years,countries]).then(() =>{
+     buildMap(firstYear);
+     buildBubble(firstYear);
+   })
  }
 
 function optionChanged(newYear) {
+  // need to call a function to reset country list
+  // need to pull country selector choice
    buildMap(newYear);
 }
 
 function countryOptionChange(newYear) {
+  // selecting country to pass to buildMap
    buildMap(newYear);
 }
 
