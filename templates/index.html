@@ -17,7 +17,9 @@
 <body>
   <div class="row justify-content-center">
     <div class="col-4">
-      <div id="chart-01" class="chart">chart1<select id="selDataset" onchange="optionChanged(this.value)"></select></div>
+      <div id="chart-01" class="chart">chart1<select id="selSmallYears" onchange="optionSmallChanged(this.value)"></select>
+        <div id="smlmap"></div>
+      </div>
       <div id="chart-02-panel">
           <select id="bubSelYears" onchange="bubbleOptionChange(this.value)"></select>
           <div id="chart-02" class="chart"></div>

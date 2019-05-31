@@ -46,6 +46,35 @@ var myMap = L.map("map", {
    accessToken: API_KEY
  }).addTo(myMap);
 
+ // New Map for Chart-01 box
+
+ //Set up map instance
+ var tMap = L.map("smlmap").setView([45.52, -122.67], 13);
+
+  // Add a tile layer
+ var smallMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.light",
+    accessToken: API_KEY
+  }).addTo(tMap);
+
+function buildSmlMap(year){
+  markers.clearLayers();
+  var url = `/smallmap/${year}`;
+  d3.json(url).then(function(response) {
+
+  for (var i = 0; i < Object.keys(response.centlat).length; i++) {
+    var latitude = response.centlat[i];
+    var longitude = response.centlong[i];
+  //  if (!isNaN(latitude) && (latitude != 0)) {
+      L.marker([latitude, longitude]).addTo(tMap);
+  //  }
+
+}
+});
+}
+
 // define contol titles for map
  var overlayMaps = {
      "Assasination": assasination,
@@ -282,13 +311,22 @@ function buildHighChart() {
     });
 }
 
+
+
+
+
+
 function init() {
   // Grab a reference to the dropdown select element
   var selector = d3.select("#selYears");
   var bubbleSelector = d3.select("#bubSelYears");
   var countryselector = d3.select("#selCountry");
+  var smallYears = d3.select("#selSmallYears");
   var firstYear = 1970;
   var firstCountry;
+
+  //large map years dropdown
+
   var years = d3.json("/years")
   years.then((Years) => {
     Years.forEach((year) => {
@@ -297,6 +335,10 @@ function init() {
         .text(year)
         .property("value", year);
       bubbleSelector
+       .append("option")
+       .text(year)
+       .property("value", year);
+      smallYears
        .append("option")
        .text(year)
        .property("value", year);
@@ -324,6 +366,7 @@ function init() {
      buildMap(firstYear,firstCountry);
      buildBubble(firstYear);
      buildHighChart();
+     buildSmlMap();
    })
 
  }
@@ -354,6 +397,11 @@ function optionChanged(newYear) {
      buildMap(newYear,newCountry);
      console.log(newCountry);
    })
+}
+
+
+function optionSmallChanged(newYear) {
+   buildSmlMap(newYear);
 }
 
 function countryOptionChange(country) {

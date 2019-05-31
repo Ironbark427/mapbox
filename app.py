@@ -18,6 +18,14 @@ def years():
     return jsonify(list(df['iyear']))
 
 
+@app.route('/smallmap/<year>')
+def smallmap(year):
+    conn = sqlite3.connect('db/storage.db')
+    df = pd.read_sql_query(
+        f'select iyear, centlat, centlong from terror_data WHERE iyear = (?);', conn, params=(year,))
+    return df.to_json()
+
+
 @app.route('/country/<year>')
 def country(year):
     conn = sqlite3.connect('db/storage.db')

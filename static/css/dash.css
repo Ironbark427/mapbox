@@ -17,6 +17,16 @@
   width: 100%;
 }
 
+#smlmap {
+  bottom: 0px;
+  height: 220px;
+  left: 0px;
+  right: 0px;
+  top: 20px;
+  width: 90%
+  overflow: hidden;
+}
+
 .chart {
   margin-bottom: 1rem;
   height: 250px;
