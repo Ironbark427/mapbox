@@ -49,7 +49,7 @@ var myMap = L.map("map", {
  // New Map for Chart-01 box
 
  //Set up map instance
- var tMap = L.map("smlmap").setView([45.52, -122.67], 13);
+ var tMap = L.map("smlmap").setView([45.52, -122.67], 2);
 
   // Add a tile layer
  var smallMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -366,7 +366,7 @@ function init() {
      buildMap(firstYear,firstCountry);
      buildBubble(firstYear);
      buildHighChart();
-     buildSmlMap();
+     buildSmlMap(firstYear);
    })
 
  }
